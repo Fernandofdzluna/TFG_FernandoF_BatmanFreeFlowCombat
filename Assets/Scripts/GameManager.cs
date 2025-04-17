@@ -91,7 +91,7 @@ public class GameManager : MonoBehaviour
 
         IEnumerator PersuingCooldown()
         {
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(1);
             enemyPersuing = false;
         }
     }
@@ -101,6 +101,15 @@ public class GameManager : MonoBehaviour
         if (hitCount > 0)
         {
             HitsCountText.SetActive(true);
+
+            if(time < maxTime)
+            {
+                time += Time.deltaTime;
+            }
+            else
+            {
+                ChangeHitCount(0);
+            }
         }
         else if(hitCount <= 0)
         {
@@ -108,6 +117,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    float time = 0;
+    float maxTime = 5;
     public void ChangeHitCount(int toAdd)
     {
         if(toAdd == 0)
@@ -120,5 +131,7 @@ public class GameManager : MonoBehaviour
             hitCount += toAdd;
             HitsCountText.GetComponent<TMP_Text>().text = hitCount.ToString();
         }
+
+        time = 0;
     }
 }

@@ -59,8 +59,10 @@ public class NPC_Script : MonoBehaviour
         }
 
         lives -= damage;
-        if (lives <= 0)
+        if (lives <= 0 || player_script.lastKill)
         {
+            Debug.Log("DENTRO");
+            lives = 0;
             GameManager.instance.ChangeHitCount(2);
             isDead = true;
             selfAnimator.SetBool("Dead", true);
@@ -90,7 +92,7 @@ public class NPC_Script : MonoBehaviour
             GetComponent<CharacterController>().enabled = false;
         }
 
-        if(persuingPlayer) if (Vector3.Distance(transform.position, player.transform.position) < 4) HitImage.SetActive(true);
+        if(persuingPlayer) if (Vector3.Distance(transform.position, player.transform.position) < 2.5f) HitImage.SetActive(true);
     }
 
     public void EnterFightMode()
@@ -219,7 +221,7 @@ public class NPC_Script : MonoBehaviour
 
         IEnumerator TimeGettingBack()
         {
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(0.5f);
             if (!stunned) getBack = true;
             yield return new WaitForSeconds(2);
             getBack = false;

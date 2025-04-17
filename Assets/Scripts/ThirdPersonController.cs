@@ -79,7 +79,7 @@ namespace StarterAssets
 
         bool firstPunchGiven = false;
         bool stunned = false;
-        bool lastKill = false;
+        internal bool lastKill = false;
         bool enemyRecentlyDodged = false;
 
         private bool IsCurrentDeviceMouse
@@ -221,7 +221,7 @@ namespace StarterAssets
         }
 
         public bool canPunch = true;
-        int punchCount;
+        int punchCount = 0;
         private void AttackChecker()
         {
             if(_input.attack && enemySelected != null)
@@ -229,6 +229,7 @@ namespace StarterAssets
                 Enemys = GameObject.FindGameObjectsWithTag("NPC");
                 if (Enemys.Length == 1 && Enemys[0].GetComponent<NPC_Script>().lives == 1)
                 {
+                    lastKill = true;
                     StartCoroutine(LastKillCamera());
                 }
 
@@ -262,6 +263,7 @@ namespace StarterAssets
                     _animator.SetFloat("PunchCount", punchCount);
                     _animator.SetTrigger("Punch");
                 }
+                
                 _input.attack = false;
             }
 
@@ -273,7 +275,6 @@ namespace StarterAssets
 
             IEnumerator LastKillCamera()
             {
-                lastKill = true;
                 CinemachineVirtualCamera cinemachineVirtual = GameObject.Find("PlayerFollowCamera").GetComponent<CinemachineVirtualCamera>();
                 cinemachineVirtual.m_Lens.FieldOfView = 10;
                 Time.timeScale = 0.3f;
@@ -286,16 +287,6 @@ namespace StarterAssets
                     Time.timeScale = Mathf.Clamp(Time.timeScale, 0f, 1f);
                 }
             }
-
-            //IEnumerator JumpLastKill()
-            //{
-            //    yield return new WaitForSeconds(timeToAproachFarEnemy/2);
-            //    float distancePlayerEnemy = Vector3.Distance(transform.position, enemySelected.transform.position);
-            //    if (distancePlayerEnemy < 2)
-            //    {
-            //        StartCoroutine(LastKillCamera());
-            //    }
-            //}
         }
 
         int dodgesCount = 1;
@@ -334,8 +325,6 @@ namespace StarterAssets
         GameObject newEnemy;
         public void DoAttackHit()
         {
-            //if (stunned) return;
-
             if(firstPunchGiven == false)
             {
                 firstPunchGiven = true;
@@ -375,8 +364,13 @@ namespace StarterAssets
             }
         }
 
+        float jumpAnim = 0;
         private void AproachFarEnemy()
         {
+            _animator.SetFloat("JumpAnim", jumpAnim);
+            jumpAnim += 1;
+            if (jumpAnim > 1) jumpAnim = 0;
+
             transform.DOLookAt(enemySelected.transform.position, .2f);
             transform.DOMove(enemySelected.transform.position - playerToEnemyDir * 0.75f, timeToAproachFarEnemy, false).OnComplete(AproachFinished);
         }
