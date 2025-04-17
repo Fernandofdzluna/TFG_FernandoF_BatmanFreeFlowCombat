@@ -61,17 +61,20 @@ public class NPC_Script : MonoBehaviour
         lives -= damage;
         if (lives <= 0)
         {
+            GameManager.instance.ChangeHitCount(2);
             isDead = true;
             selfAnimator.SetBool("Dead", true);
             tag = "Untagged";
         }
+        else
+            GameManager.instance.ChangeHitCount(1);
 
 
         IEnumerator GetUp()
-        {
-            yield return new WaitForSeconds(2);
-            stunned = false;
-        }
+            {
+                yield return new WaitForSeconds(2);
+                stunned = false;
+            }
     }
 
     private void LateUpdate()

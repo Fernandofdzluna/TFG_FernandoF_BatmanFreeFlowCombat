@@ -80,6 +80,7 @@ namespace StarterAssets
         bool firstPunchGiven = false;
         bool stunned = false;
         bool lastKill = false;
+        bool enemyRecentlyDodged = false;
 
         private bool IsCurrentDeviceMouse
         {
@@ -226,7 +227,7 @@ namespace StarterAssets
             if(_input.attack && enemySelected != null)
             {
                 Enemys = GameObject.FindGameObjectsWithTag("NPC");
-                if (Enemys.Length == 1 && enemySelected.GetComponent<NPC_Script>().lives == 1)
+                if (Enemys.Length == 1 && Enemys[0].GetComponent<NPC_Script>().lives == 1)
                 {
                     StartCoroutine(LastKillCamera());
                 }
@@ -306,10 +307,12 @@ namespace StarterAssets
             {
                 if (Vector3.Distance(transform.position, chargingEnemy.transform.position) < 2)
                 {
+                    GameManager.instance.ChangeHitCount(1);
                     dodge = true;
                     transform.DOLookAt(chargingEnemy.transform.position, 0.5f);
                     _animator.SetFloat("DodgesBlock", dodgesCount);
                     _animator.SetTrigger("Dodge");
+                    StartCoroutine(ShakeCamera(0.5f, 7));
                     StartCoroutine(DodgeCooldown());
                     dodgesCount += 1;
                     if (dodgesCount > 3) dodgesCount = 0;
@@ -320,6 +323,7 @@ namespace StarterAssets
             IEnumerator DodgeCooldown()
             {
                 enemySelected = chargingEnemy;
+                enemyRecentlyDodged = true;
                 chargingEnemy = null;
                 yield return new WaitForSeconds(1);
                 dodge = false;
@@ -385,15 +389,26 @@ namespace StarterAssets
 
         private void RaycastChecker()
         {
-            RaycastHit hit;
-            int layerMask = 1 << LayerMask.NameToLayer("Enemy");
-
-            if (Physics.SphereCast(transform.position, 3, Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward, out hit, 10, ~layerMask))
+            if (enemyRecentlyDodged == false)
             {
-                if (hit.collider.tag == "NPC" && movingToEnemy == false && hit.collider.GetComponent<NPC_Script>().isDead == false)
+                RaycastHit hit;
+                int layerMask = 1 << LayerMask.NameToLayer("Enemy");
+
+                if (Physics.SphereCast(transform.position, 3, Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward, out hit, 10, ~layerMask))
                 {
-                    enemySelected = hit.collider.gameObject;
+                    if (hit.collider.tag == "NPC" && movingToEnemy == false && hit.collider.GetComponent<NPC_Script>().isDead == false)
+                    {
+                        enemySelected = hit.collider.gameObject;
+                    }
                 }
+            }
+            else
+                StartCoroutine(GetNewEnemies());
+
+            IEnumerator GetNewEnemies()
+            {
+                yield return new WaitForSeconds(1);
+                enemyRecentlyDodged = false;
             }
         }
 
@@ -421,6 +436,7 @@ namespace StarterAssets
         float punchedRecived = 0;
         public void ReciveHit()
         {
+            GameManager.instance.ChangeHitCount(0);
             stunned = true;
             StartCoroutine(ShakeCamera(0.6f, 20));
             playerMovingFree = false;

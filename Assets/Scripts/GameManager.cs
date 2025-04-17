@@ -1,5 +1,7 @@
+using DG.Tweening;
 using StarterAssets;
 using System.Collections;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -9,6 +11,9 @@ public class GameManager : MonoBehaviour
     ThirdPersonController playerScript;
     GameObject[] enemys;
     public bool anyEnemyPunching = false;
+
+    [SerializeField] GameObject HitsCountText;
+    internal int hitCount;
 
     private void OnEnable()
     {
@@ -25,6 +30,9 @@ public class GameManager : MonoBehaviour
         playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<ThirdPersonController>();
         anyEnemyPunching = false;
         Cursor.visible = false;
+        hitCount = 0;
+        HitsCountText.GetComponent<TMP_Text>().text = "0";
+        HitsCountText.transform.DOShakePosition(100000, 5, 30);
     }
 
     public void beginFight()
@@ -85,6 +93,32 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(2);
             enemyPersuing = false;
+        }
+    }
+
+    private void Update()
+    {
+        if (hitCount > 0)
+        {
+            HitsCountText.SetActive(true);
+        }
+        else if(hitCount <= 0)
+        {
+            HitsCountText.SetActive(false);
+        }
+    }
+
+    public void ChangeHitCount(int toAdd)
+    {
+        if(toAdd == 0)
+        {
+            hitCount = 0;
+            HitsCountText.GetComponent<TMP_Text>().text = hitCount.ToString();
+        }
+        else
+        {
+            hitCount += toAdd;
+            HitsCountText.GetComponent<TMP_Text>().text = hitCount.ToString();
         }
     }
 }
