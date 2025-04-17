@@ -79,6 +79,7 @@ namespace StarterAssets
 
         bool firstPunchGiven = false;
         bool stunned = false;
+        bool lastKill = false;
 
         private bool IsCurrentDeviceMouse
         {
@@ -271,6 +272,7 @@ namespace StarterAssets
 
             IEnumerator LastKillCamera()
             {
+                lastKill = true;
                 CinemachineVirtualCamera cinemachineVirtual = GameObject.Find("PlayerFollowCamera").GetComponent<CinemachineVirtualCamera>();
                 cinemachineVirtual.m_Lens.FieldOfView = 10;
                 Time.timeScale = 0.3f;
@@ -295,6 +297,7 @@ namespace StarterAssets
             //}
         }
 
+        int dodgesCount = 1;
         public bool dodge = false;
         public GameObject chargingEnemy;
         private void DodgeChecker()
@@ -304,11 +307,15 @@ namespace StarterAssets
                 if (Vector3.Distance(transform.position, chargingEnemy.transform.position) < 2)
                 {
                     dodge = true;
-                    transform.DOLookAt(chargingEnemy.transform.position, 1);
+                    transform.DOLookAt(chargingEnemy.transform.position, 0.5f);
+                    _animator.SetFloat("DodgesBlock", dodgesCount);
                     _animator.SetTrigger("Dodge");
                     StartCoroutine(DodgeCooldown());
+                    dodgesCount += 1;
+                    if (dodgesCount > 3) dodgesCount = 0;
                 }
             }
+            _input.dodge = false;
 
             IEnumerator DodgeCooldown()
             {
@@ -323,7 +330,7 @@ namespace StarterAssets
         GameObject newEnemy;
         public void DoAttackHit()
         {
-            if (stunned) return;
+            //if (stunned) return;
 
             if(firstPunchGiven == false)
             {
@@ -333,7 +340,7 @@ namespace StarterAssets
 
             playerToEnemyDir = (enemySelected.transform.position - transform.position).normalized;
             float secondDistance = Vector3.Distance(transform.position, enemySelected.transform.position);
-            if (secondDistance <= 2)
+            if (secondDistance <= 2 || lastKill == true)
             {
                 ParticleHit.SetActive(true);
                 StartCoroutine(ShakeCamera(0.3f, 12));

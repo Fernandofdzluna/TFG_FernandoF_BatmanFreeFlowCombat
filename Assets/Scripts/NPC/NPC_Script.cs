@@ -86,6 +86,8 @@ public class NPC_Script : MonoBehaviour
             HitImage.SetActive(false);
             GetComponent<CharacterController>().enabled = false;
         }
+
+        if(persuingPlayer) if (Vector3.Distance(transform.position, player.transform.position) < 4) HitImage.SetActive(true);
     }
 
     public void EnterFightMode()
@@ -125,7 +127,6 @@ public class NPC_Script : MonoBehaviour
             }
             else
             {
-                selfAnimator.SetFloat("FightMove", 1);
                 StopMoving();
             }
         }
@@ -200,7 +201,6 @@ public class NPC_Script : MonoBehaviour
         else
         {
             persuingPlayer = true;
-            HitImage.SetActive(true);
             player_script.chargingEnemy = this.gameObject;
         }
     }
@@ -217,7 +217,7 @@ public class NPC_Script : MonoBehaviour
         IEnumerator TimeGettingBack()
         {
             yield return new WaitForSeconds(1);
-            getBack = true;
+            if (!stunned) getBack = true;
             yield return new WaitForSeconds(2);
             getBack = false;
         }
