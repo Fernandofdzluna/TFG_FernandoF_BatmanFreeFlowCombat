@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
         enemys = GameObject.FindGameObjectsWithTag("NPC");
         playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<ThirdPersonController>();
         anyEnemyPunching = false;
+        Cursor.visible = false;
     }
 
     public void beginFight()
