@@ -294,10 +294,11 @@ namespace StarterAssets
         public GameObject chargingEnemy;
         private void DodgeChecker()
         {
-            if (_input.dodge && dodge == false && chargingEnemy != null)
+            if (_input.dodge && dodge == false && chargingEnemy != null && chargingEnemy.GetComponent<NPC_Script>().HitImage.activeInHierarchy)
             {
                 if (Vector3.Distance(transform.position, chargingEnemy.transform.position) < 2)
                 {
+                    chargingEnemy.GetComponent<NPC_Script>().DodgetAttack();
                     GameManager.instance.ChangeHitCount(1);
                     dodge = true;
                     transform.DOLookAt(chargingEnemy.transform.position, 0.5f);

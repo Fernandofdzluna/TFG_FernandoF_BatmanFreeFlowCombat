@@ -12,7 +12,7 @@ public class NPC_Script : MonoBehaviour
     ThirdPersonController player_script;
     Animator selfAnimator;
     CharacterController characterController;
-    [SerializeField] GameObject HitImage;
+    public GameObject HitImage;
 
     [Space(10)]
     [Header("Values")]
@@ -28,6 +28,7 @@ public class NPC_Script : MonoBehaviour
     internal bool isWaiting = true;
     bool persuingPlayer = false;
     bool getBack = false;
+    internal bool matonesSupport = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -61,7 +62,6 @@ public class NPC_Script : MonoBehaviour
         lives -= damage;
         if (lives <= 0 || player_script.lastKill)
         {
-            Debug.Log("DENTRO");
             lives = 0;
             GameManager.instance.ChangeHitCount(2);
             isDead = true;
@@ -70,6 +70,18 @@ public class NPC_Script : MonoBehaviour
         }
         else
             GameManager.instance.ChangeHitCount(1);
+
+        if (player_script.lastKill)
+        {
+            GameObject[] LastEnemys = GameObject.FindGameObjectsWithTag("NPC");
+            if(LastEnemys.Length > 0)
+            {
+                for(int i = 0; i < LastEnemys.Length; i++)
+                {
+                    LastEnemys[i].GetComponent<NPC_Script>().ChangeLives(1);
+                }
+            }
+        }
 
 
         IEnumerator GetUp()
@@ -91,8 +103,6 @@ public class NPC_Script : MonoBehaviour
             HitImage.SetActive(false);
             GetComponent<CharacterController>().enabled = false;
         }
-
-        if(persuingPlayer) if (Vector3.Distance(transform.position, player.transform.position) < 2.5f) HitImage.SetActive(true);
     }
 
     public void EnterFightMode()
@@ -105,6 +115,7 @@ public class NPC_Script : MonoBehaviour
         }
     }
 
+    bool getBakcChecker = false;
     IEnumerator StartMovingCoroutine()
     {
         //Waits until the enemy is not assigned to no action like attacking or retreating
@@ -115,10 +126,17 @@ public class NPC_Script : MonoBehaviour
             moveDirection = Vector3.forward;
             isMoving = true;
         }
-        else if(getBack)
+        else if (getBack)
         {
+            if (getBakcChecker == false) getBakcChecker = true;
+            else if (getBakcChecker) getBack = false;
+
             moveDirection = -Vector3.forward;
             isMoving = true;
+        }
+        else if(matonesSupport)
+        {
+            if(!gettingClose) StartCoroutine(GetCloseToPlayer());
         }
         else
         {
@@ -136,9 +154,30 @@ public class NPC_Script : MonoBehaviour
             }
         }
 
-            yield return new WaitForSeconds(2);
+        if (getBakcChecker) getBakcChecker = false;
+
+        yield return new WaitForSeconds(2);
 
         StartCoroutine(StartMovingCoroutine());
+    }
+
+    bool gettingClose = false;
+    IEnumerator GetCloseToPlayer()
+    {
+        gettingClose = true;
+
+        if (Vector3.Distance(transform.position, player.transform.position) > 3)
+        {
+            moveDirection = Vector3.forward;
+            isMoving = true;
+            yield return new WaitForSeconds(0.2f);
+            StartCoroutine(GetCloseToPlayer());
+        }
+        else
+        {
+            matonesSupport = false;
+            StopMoving();
+        }
     }
 
     private void MoveEnemy(Vector3 direction)
@@ -206,27 +245,52 @@ public class NPC_Script : MonoBehaviour
         else
         {
             persuingPlayer = true;
-            player_script.chargingEnemy = this.gameObject;
         }
     }
 
     public void Attack()
     {
+        if(persuingPlayer)
+        {
+            HitImage.SetActive(true);
+            player_script.chargingEnemy = this.gameObject;
+            StartCoroutine(StartAttack());
+        }
+
+        IEnumerator StartAttack()
+        {
+            yield return new WaitForSeconds(1);
+            if(!dodgedAttack)
+            {
+                selfAnimator.SetTrigger("ThrowPunch");
+                persuingPlayer = false;
+                GameManager.instance.DonePersuing();
+                HitImage.SetActive(false);
+                StartCoroutine(TimeGettingBack());
+            }
+        }
+    }
+
+    internal bool dodgedAttack = false;
+    public void DodgetAttack()
+    {
+        dodgedAttack = true;
         selfAnimator.SetTrigger("ThrowPunch");
         persuingPlayer = false;
         GameManager.instance.DonePersuing();
         HitImage.SetActive(false);
-        player_script.chargingEnemy = null;
         StartCoroutine(TimeGettingBack());
-
-        IEnumerator TimeGettingBack()
-        {
-            yield return new WaitForSeconds(0.5f);
-            if (!stunned) getBack = true;
-            yield return new WaitForSeconds(2);
-            getBack = false;
-        }
     }
+
+    IEnumerator TimeGettingBack()
+    {
+        yield return new WaitForSeconds(0.5f);
+        if (!stunned) getBack = true;
+        yield return new WaitForSeconds(1.5f);
+        getBack = false;
+        dodgedAttack = false;
+    }
+
 
     public void GettingJumped()
     {

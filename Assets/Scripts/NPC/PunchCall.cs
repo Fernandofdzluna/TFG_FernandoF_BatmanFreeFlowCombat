@@ -18,7 +18,7 @@ public class PunchCall : MonoBehaviour
 
     public void DoPunchToPlayer()
     {
-        if(!playerScript.dodge)
+        if (!playerScript.dodge && Vector3.Distance(transform.position, playerScript.gameObject.transform.position) < 2 && npcScript.dodgedAttack == false)
         {
             playerScript.ReciveHit();
             HitParticlesEffect.SetActive(true);
