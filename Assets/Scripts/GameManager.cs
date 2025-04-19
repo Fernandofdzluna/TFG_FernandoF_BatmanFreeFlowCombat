@@ -52,14 +52,22 @@ public class GameManager : MonoBehaviour
     internal GameObject maton2;
     IEnumerator FightManager()
     {
-        enemys = GameObject.FindGameObjectsWithTag("NPC");
-        if (enemys.Length == 0) yield break;
-
-        int randomNum = Random.Range(0, enemys.Length - 1);
-        selectedEnemy = enemys[randomNum];
+        if(NoNpcPersuing())
+        {
+            selectedEnemy = null;
+            maton1 = null;
+            maton2 = null;
+            enemyPersuing = false;
+        }
 
         if (enemyPersuing == false)
         {
+            enemys = GameObject.FindGameObjectsWithTag("NPC");
+            if (enemys.Length == 0) yield break;
+
+            int randomNum = Random.Range(0, enemys.Length - 1);
+            selectedEnemy = enemys[randomNum];
+
             enemyPersuing = true;
             selectedEnemy.GetComponent<NPC_Script>().PersuePlayer();
 
@@ -80,6 +88,35 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitForSeconds(1);
         StartCoroutine(FightManager());
+    }
+
+    public bool NoNpcPersuing()
+    {
+        bool selectedEnemyPersuing = false;
+        bool maton1Persuing = false;
+        bool maton2Persuing = false;
+
+        enemys = GameObject.FindGameObjectsWithTag("NPC");
+
+        if (selectedEnemy != null)
+        {
+            if (selectedEnemy.GetComponent<NPC_Script>().persuingPlayer) selectedEnemyPersuing = true;
+        }
+        else selectedEnemyPersuing = true;
+
+        if (maton1 != null)
+        {
+            if (maton1.GetComponent<NPC_Script>().persuingPlayer) maton1Persuing = true;
+        }
+        else maton1Persuing = true;
+
+        if (maton2 != null)
+        {
+            if (maton2.GetComponent<NPC_Script>().persuingPlayer) maton2Persuing = true;
+        }
+        else maton2Persuing = true;
+
+        return selectedEnemyPersuing && maton1Persuing && maton2Persuing;
     }
 
     public bool CanPunchToPlayer(NPC_Script npc)
