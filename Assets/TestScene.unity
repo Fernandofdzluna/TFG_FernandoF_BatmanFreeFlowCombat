@@ -786,6 +786,10 @@ PrefabInstance:
       propertyPath: 'm_Bones.Array.data[67]'
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8072447719835777183, guid: 664b71019ce317249947c11845879a17, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.05
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2216971083427283427, guid: 664b71019ce317249947c11845879a17, type: 3}
     - {fileID: 745090470136784305, guid: 664b71019ce317249947c11845879a17, type: 3}
@@ -1563,6 +1567,10 @@ PrefabInstance:
       propertyPath: 'm_Bones.Array.data[67]'
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8072447719835777183, guid: 664b71019ce317249947c11845879a17, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.05
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2216971083427283427, guid: 664b71019ce317249947c11845879a17, type: 3}
     - {fileID: 745090470136784305, guid: 664b71019ce317249947c11845879a17, type: 3}
@@ -1652,7 +1660,6 @@ MonoBehaviour:
   anyEnemyPunching: 0
   HitsCountText: {fileID: 1966629268}
   selectedEnemy: {fileID: 0}
-  enemyPersuing: 0
 --- !u!1 &785815942
 GameObject:
   m_ObjectHideFlags: 0
@@ -2515,6 +2522,10 @@ PrefabInstance:
     - target: {fileID: 7628469986249509934, guid: 664b71019ce317249947c11845879a17, type: 3}
       propertyPath: 'm_Bones.Array.data[67]'
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8072447719835777183, guid: 664b71019ce317249947c11845879a17, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.05
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2216971083427283427, guid: 664b71019ce317249947c11845879a17, type: 3}
@@ -3410,6 +3421,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -6.550234
       objectReference: {fileID: 0}
+    - target: {fileID: 8072447719835777183, guid: 664b71019ce317249947c11845879a17, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.05
+      objectReference: {fileID: 0}
     - target: {fileID: 8112897665192302282, guid: 664b71019ce317249947c11845879a17, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: -49.589413
@@ -3920,6 +3935,10 @@ PrefabInstance:
       propertyPath: 'm_Bones.Array.data[67]'
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8072447719835777183, guid: 664b71019ce317249947c11845879a17, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.05
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2216971083427283427, guid: 664b71019ce317249947c11845879a17, type: 3}
     - {fileID: 745090470136784305, guid: 664b71019ce317249947c11845879a17, type: 3}
@@ -4375,6 +4394,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1546189078227487675, guid: ab3a43fa69b154e4cb794ebfd8a82b5f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.05
+      objectReference: {fileID: 0}
     - target: {fileID: 2876434897787275315, guid: ab3a43fa69b154e4cb794ebfd8a82b5f, type: 3}
       propertyPath: m_Name
       value: ----Player----
@@ -4679,6 +4702,10 @@ PrefabInstance:
     - target: {fileID: 6306313652704930038, guid: 664b71019ce317249947c11845879a17, type: 3}
       propertyPath: m_Name
       value: NPC
+      objectReference: {fileID: 0}
+    - target: {fileID: 8072447719835777183, guid: 664b71019ce317249947c11845879a17, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.05
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

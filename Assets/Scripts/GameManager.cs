@@ -47,9 +47,9 @@ public class GameManager : MonoBehaviour
     }
 
     public GameObject selectedEnemy;
-    bool enemyPersuing = false;
-    GameObject maton1;
-    GameObject maton2;
+    public bool enemyPersuing = false;
+    internal GameObject maton1;
+    internal GameObject maton2;
     IEnumerator FightManager()
     {
         enemys = GameObject.FindGameObjectsWithTag("NPC");
@@ -60,7 +60,6 @@ public class GameManager : MonoBehaviour
 
         if (enemyPersuing == false)
         {
-            Debug.Log("Ataque");
             enemyPersuing = true;
             selectedEnemy.GetComponent<NPC_Script>().PersuePlayer();
 

@@ -26,7 +26,7 @@ public class NPC_Script : MonoBehaviour
     bool isMoving = false;
     internal bool stunned = false;
     internal bool isWaiting = true;
-    bool persuingPlayer = false;
+    public bool persuingPlayer = false;
     bool getBack = false;
     internal bool matonesSupport = false;
 
@@ -67,6 +67,17 @@ public class NPC_Script : MonoBehaviour
             isDead = true;
             selfAnimator.SetBool("Dead", true);
             tag = "Untagged";
+            if(persuingPlayer)
+            {
+                persuingPlayer = false;
+                GameManager.instance.DonePersuing();
+                HitImage.SetActive(false);
+            }
+            else if(matonesSupport)
+            {
+                if (GameManager.instance.maton1 == this.gameObject) GameManager.instance.maton1 = null;
+                else if (GameManager.instance.maton2 == this.gameObject) GameManager.instance.maton2 = null;
+            }
         }
         else
             GameManager.instance.ChangeHitCount(1);
@@ -115,7 +126,6 @@ public class NPC_Script : MonoBehaviour
         }
     }
 
-    bool getBakcChecker = false;
     IEnumerator StartMovingCoroutine()
     {
         //Waits until the enemy is not assigned to no action like attacking or retreating
@@ -128,9 +138,6 @@ public class NPC_Script : MonoBehaviour
         }
         else if (getBack)
         {
-            if (getBakcChecker == false) getBakcChecker = true;
-            else if (getBakcChecker) getBack = false;
-
             moveDirection = -Vector3.forward;
             isMoving = true;
         }
@@ -153,8 +160,6 @@ public class NPC_Script : MonoBehaviour
                 StopMoving();
             }
         }
-
-        if (getBakcChecker) getBakcChecker = false;
 
         yield return new WaitForSeconds(2);
 
@@ -285,9 +290,16 @@ public class NPC_Script : MonoBehaviour
     IEnumerator TimeGettingBack()
     {
         yield return new WaitForSeconds(0.5f);
-        if (!stunned) getBack = true;
-        yield return new WaitForSeconds(1.5f);
-        getBack = false;
+        if (!stunned)
+        {
+            getBack = true;
+        }
+        yield return new WaitForSeconds(2);
+        if(getBack)
+        {
+            getBack = false;
+            StopMoving();
+        }
         dodgedAttack = false;
     }
 

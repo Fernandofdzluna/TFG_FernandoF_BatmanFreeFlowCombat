@@ -226,13 +226,6 @@ namespace StarterAssets
         {
             if(_input.attack && enemySelected != null)
             {
-                Enemys = GameObject.FindGameObjectsWithTag("NPC");
-                if (Enemys.Length == 1 && Enemys[0].GetComponent<NPC_Script>().lives == 1)
-                {
-                    lastKill = true;
-                    StartCoroutine(LastKillCamera());
-                }
-
                 playerToEnemyDir = (enemySelected.transform.position - transform.position).normalized;
                 float distancePlayerEnemy = Vector3.Distance(transform.position, enemySelected.transform.position);
                 if (distancePlayerEnemy > 2)
@@ -240,6 +233,13 @@ namespace StarterAssets
                     playerMovingFree = false;
                     if (movingToEnemy == false)
                     {
+                        Enemys = GameObject.FindGameObjectsWithTag("NPC");
+                        if (Enemys.Length == 1 && Enemys[0].GetComponent<NPC_Script>().lives == 1)
+                        {
+                            lastKill = true;
+                            StartCoroutine(LastKillCamera());
+                        }
+
                         movingToEnemy = true;
                         float distanceInTime = (distancePlayerEnemy / 0.1f) / timeToAproachFarEnemy;
                         enemySelected.GetComponent<NPC_Script>().GettingJumped();
@@ -253,6 +253,13 @@ namespace StarterAssets
                 }
                 else if(canPunch && movingToEnemy == false)
                 {
+                    Enemys = GameObject.FindGameObjectsWithTag("NPC");
+                    if (Enemys.Length == 1 && Enemys[0].GetComponent<NPC_Script>().lives == 1)
+                    {
+                        lastKill = true;
+                        StartCoroutine(LastKillCamera());
+                    }
+
                     canPunch = false;
                     StartCoroutine(PunchCooldown());
                     punchCount += 1;
@@ -263,7 +270,7 @@ namespace StarterAssets
                     _animator.SetFloat("PunchCount", punchCount);
                     _animator.SetTrigger("Punch");
                 }
-                
+
                 _input.attack = false;
             }
 
