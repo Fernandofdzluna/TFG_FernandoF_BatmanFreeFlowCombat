@@ -1,10 +1,7 @@
 using StarterAssets;
 using UnityEngine;
 using DG.Tweening;
-using UnityEditor.Experimental.GraphView;
 using System.Collections;
-using UnityEngine.EventSystems;
-using Unity.VisualScripting;
 
 public class NPC_Script : MonoBehaviour
 {
