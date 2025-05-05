@@ -224,7 +224,23 @@ public class NPC_Script : MonoBehaviour
         if (Vector3.Distance(transform.position, player.transform.position) < 1f && stunned == false && persuingPlayer == true)
         {
             if (GameManager.instance.CanPunchToPlayer(this)) Attack();
-            StopMoving();
+            else if(stunned == false) StartCoroutine(CheckAgainPunch());
+            else
+            {
+                persuingPlayer = false;
+                GameManager.instance.DonePersuing();
+                HitImage.SetActive(false);
+                StartCoroutine(TimeGettingBack());
+            }
+
+                StopMoving();
+        }
+
+        IEnumerator CheckAgainPunch()
+        {
+            yield return new WaitForSeconds(1);
+            if (GameManager.instance.CanPunchToPlayer(this)) Attack();
+            else StartCoroutine(CheckAgainPunch());
         }
     }
 
