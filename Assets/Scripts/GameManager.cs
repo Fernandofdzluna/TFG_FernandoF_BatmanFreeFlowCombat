@@ -4,6 +4,8 @@ using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,6 +16,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GameObject HitsCountText;
     internal int hitCount;
+
+    public GameObject restartingGame;
 
     private void OnEnable()
     {
@@ -52,13 +56,7 @@ public class GameManager : MonoBehaviour
     internal GameObject maton2;
     IEnumerator FightManager()
     {
-        if(NoNpcPersuing())
-        {
-            selectedEnemy = null;
-            maton1 = null;
-            maton2 = null;
-            enemyPersuing = false;
-        }
+        NoNpcPersuing();
 
         if (enemyPersuing == false)
         {
@@ -86,37 +84,45 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(1);
         StartCoroutine(FightManager());
     }
 
-    public bool NoNpcPersuing()
+    public void NoNpcPersuing()
     {
-        bool selectedEnemyPersuing = false;
-        bool maton1Persuing = false;
-        bool maton2Persuing = false;
-
-        enemys = GameObject.FindGameObjectsWithTag("NPC");
-
-        if (selectedEnemy != null)
+        if(enemyPersuing == true)
         {
-            if (selectedEnemy.GetComponent<NPC_Script>().persuingPlayer) selectedEnemyPersuing = true;
+            if(selectedEnemy != null)
+            {
+                if(selectedEnemy.GetComponent<NPC_Script>().persuingPlayer == false)
+                {
+                    if (maton1 != null)
+                    {
+                        selectedEnemy = maton1;
+                        maton1 = null;
+                    }
+                    else if (maton2 != null)
+                    {
+                        selectedEnemy = maton2;
+                        maton2 = null;
+                    }
+                    else
+                    {
+                        selectedEnemy = null;
+                        maton1 = null;
+                        maton2 = null;
+                        enemyPersuing = false;
+                    }
+                }
+            }
+            else
+            {
+                selectedEnemy = null;
+                maton1 = null;
+                maton2 = null;
+                enemyPersuing = false;
+            }
         }
-        else selectedEnemyPersuing = true;
-
-        if (maton1 != null)
-        {
-            if (maton1.GetComponent<NPC_Script>().persuingPlayer) maton1Persuing = true;
-        }
-        else maton1Persuing = true;
-
-        if (maton2 != null)
-        {
-            if (maton2.GetComponent<NPC_Script>().persuingPlayer) maton2Persuing = true;
-        }
-        else maton2Persuing = true;
-
-        return selectedEnemyPersuing && maton1Persuing && maton2Persuing;
     }
 
     public bool CanPunchToPlayer(NPC_Script npc)
@@ -151,20 +157,23 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(PersuingCooldown());
                 deciding = false;
             }
-            else if (enemyPersuing && maton1 != null && maton2 != null)
+            else if (enemyPersuing && maton1 != null)
             {
                 maton1.GetComponent<NPC_Script>().PersuePlayer();
+                selectedEnemy = maton1;
                 maton1 = null;
                 deciding = false;
             }
-            else if (enemyPersuing && maton1 == null && maton2 != null)
+            else if (enemyPersuing && maton2 != null)
             {
                 maton2.GetComponent<NPC_Script>().PersuePlayer();
+                selectedEnemy = maton2;
                 maton2 = null;
                 deciding = false;
             }
             else
             {
+                selectedEnemy = null;
                 maton1 = null;
                 maton2 = null;
                 StartCoroutine(PersuingCooldown());
@@ -216,5 +225,22 @@ public class GameManager : MonoBehaviour
         }
 
         time = 0;
+    }
+
+    public IEnumerator FinishGame()
+    {
+        Debug.Log("Dentro");
+        yield return new WaitForSeconds(2);
+        restartingGame.SetActive(true);
+        yield return new WaitForSeconds(1);
+        restartingGame.transform.GetChild(0).GetComponent<Text>().text = "4";
+        yield return new WaitForSeconds(1);
+        restartingGame.transform.GetChild(0).GetComponent<Text>().text = "3";
+        yield return new WaitForSeconds(1);
+        restartingGame.transform.GetChild(0).GetComponent<Text>().text = "2";
+        yield return new WaitForSeconds(1);
+        restartingGame.transform.GetChild(0).GetComponent<Text>().text = "1";
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene("TestScene");
     }
 }

@@ -82,6 +82,8 @@ namespace StarterAssets
         internal bool lastKill = false;
         bool enemyRecentlyDodged = false;
 
+        public RectTransform selectedEnemyIcon;
+
         private bool IsCurrentDeviceMouse
         {
             get
@@ -293,6 +295,7 @@ namespace StarterAssets
                     Time.timeScale += (1f / 4f) * Time.unscaledDeltaTime;
                     Time.timeScale = Mathf.Clamp(Time.timeScale, 0f, 1f);
                 }
+                GameManager.instance.StartCoroutine(GameManager.instance.FinishGame());
             }
         }
 
@@ -423,6 +426,7 @@ namespace StarterAssets
             {
                 Gizmos.color = transparentGreen;
                 Gizmos.DrawSphere(enemySelected.transform.position + new Vector3(0, 1, 0), 0.5f);
+                selectedEnemyIcon.transform.LookAt(enemySelected.transform.position);
             }
         }
 

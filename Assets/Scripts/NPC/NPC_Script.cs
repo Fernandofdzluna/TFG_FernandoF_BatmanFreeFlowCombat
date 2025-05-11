@@ -25,7 +25,9 @@ public class NPC_Script : MonoBehaviour
     internal bool isWaiting = true;
     public bool persuingPlayer = false;
     bool getBack = false;
-    internal bool matonesSupport = false;
+    [SerializeField] internal bool matonesSupport = false;
+
+    public GameObject targetLight;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -110,6 +112,15 @@ public class NPC_Script : MonoBehaviour
         {
             HitImage.SetActive(false);
             GetComponent<CharacterController>().enabled = false;
+        }
+
+        if(player_script.enemySelected == this.gameObject)
+        {
+            targetLight.SetActive(true);
+        }
+        else
+        {
+            targetLight.SetActive(false);
         }
     }
 
@@ -224,8 +235,8 @@ public class NPC_Script : MonoBehaviour
         if (Vector3.Distance(transform.position, player.transform.position) < 1f && stunned == false && persuingPlayer == true)
         {
             if (GameManager.instance.CanPunchToPlayer(this)) Attack();
-            else if(stunned == false) StartCoroutine(CheckAgainPunch());
-            else
+            else if (stunned == false) StartCoroutine(CheckAgainPunch());
+            else if (persuingPlayer == true)
             {
                 persuingPlayer = false;
                 GameManager.instance.DonePersuing();
