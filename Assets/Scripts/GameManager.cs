@@ -34,9 +34,9 @@ public class GameManager : MonoBehaviour
         playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<ThirdPersonController>();
         anyEnemyPunching = false;
         Cursor.visible = false;
-        hitCount = 0;
-        HitsCountText.GetComponent<TMP_Text>().text = "0";
         HitsCountText.transform.DOShakePosition(100000, 5, 30);
+        hitCount = 0;
+        HitsCountText.GetComponent<TMP_Text>().text = "x0";
     }
 
     public void beginFight()
@@ -84,7 +84,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-            yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.3f);
         StartCoroutine(FightManager());
     }
 
@@ -216,12 +216,12 @@ public class GameManager : MonoBehaviour
         if(toAdd == 0)
         {
             hitCount = 0;
-            HitsCountText.GetComponent<TMP_Text>().text = hitCount.ToString();
+            HitsCountText.GetComponent<TMP_Text>().text = "x" + hitCount.ToString();
         }
         else
         {
             hitCount += toAdd;
-            HitsCountText.GetComponent<TMP_Text>().text = hitCount.ToString();
+            HitsCountText.GetComponent<TMP_Text>().text = "x" + hitCount.ToString();
         }
 
         time = 0;
@@ -229,7 +229,6 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator FinishGame()
     {
-        Debug.Log("Dentro");
         yield return new WaitForSeconds(2);
         restartingGame.SetActive(true);
         yield return new WaitForSeconds(1);

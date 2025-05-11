@@ -4,6 +4,7 @@ using System.Collections;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 #endif
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
@@ -83,6 +84,7 @@ namespace StarterAssets
         bool enemyRecentlyDodged = false;
 
         public RectTransform selectedEnemyIcon;
+        public Image RedColorForRecivedDamage_UI;
 
         private bool IsCurrentDeviceMouse
         {
@@ -316,6 +318,7 @@ namespace StarterAssets
                     _animator.SetTrigger("Dodge");
                     StartCoroutine(ShakeCamera(0.5f, 7));
                     StartCoroutine(DodgeCooldown());
+
                     dodgesCount += 1;
                     if (dodgesCount > 3) dodgesCount = 0;
                 }
@@ -444,7 +447,7 @@ namespace StarterAssets
         {
             GameManager.instance.ChangeHitCount(0);
             stunned = true;
-            StartCoroutine(ShakeCamera(0.6f, 20));
+            StartCoroutine(ShakeCamera(1, 40));
             playerMovingFree = false;
             canPunch = false;
             _animator.SetFloat("PunchedRecived", punchedRecived);
@@ -454,6 +457,10 @@ namespace StarterAssets
             {
                 //Animation Puñetazo
                 _animator.SetTrigger("RecivePunch");
+
+                Animator animator = RedColorForRecivedDamage_UI.GetComponent<Animator>();
+                animator.SetTrigger("Hit");
+
                 yield return new WaitForSeconds(1);
                 stunned = false;
                 playerMovingFree = true;

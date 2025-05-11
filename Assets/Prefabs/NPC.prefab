@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2962226831758479447}
   - component: {fileID: 7270283550806782932}
   - component: {fileID: 6401190262524014853}
+  - component: {fileID: 909183187992402380}
   m_Layer: 8
   m_Name: Canvas
   m_TagString: HitImage
@@ -102,6 +103,28 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!95 &909183187992402380
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 911569756985847058}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 64e8bace4e9a4c0458db7d3e874a1c37, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2562460672987201147
 GameObject:
   m_ObjectHideFlags: 0
@@ -495,6 +518,7 @@ MonoBehaviour:
   lives: 5
   isDead: 0
   persuingPlayer: 0
+  matonesSupport: 0
   targetLight: {fileID: 5232583068363556899}
 --- !u!143 &6728499028424700808
 CharacterController:

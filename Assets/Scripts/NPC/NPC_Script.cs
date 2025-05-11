@@ -200,10 +200,9 @@ public class NPC_Script : MonoBehaviour
         moveSpeed = 1;
 
         if (direction == Vector3.forward)
-            moveSpeed = 5;
+            moveSpeed = 5 + (GameManager.instance.hitCount * 0.1f);
         if (direction == -Vector3.forward)
-            moveSpeed = 2;
-
+            moveSpeed = 2 + (GameManager.instance.hitCount * 0.1f);
 
         //Establecer valores animator
         selfAnimator.SetFloat("FightMove", (characterController.velocity.normalized.magnitude * direction.z) / (5 / moveSpeed), .2f, Time.deltaTime);
@@ -288,8 +287,17 @@ public class NPC_Script : MonoBehaviour
 
         IEnumerator StartAttack()
         {
-            yield return new WaitForSeconds(1);
-            if(!dodgedAttack)
+            if(1 - (GameManager.instance.hitCount * 0.02f) > 0.2f)
+            {
+                yield return new WaitForSeconds(1 - (GameManager.instance.hitCount * 0.02f));
+            }
+            else
+            {
+                yield return new WaitForSeconds(0.2f);
+            }
+
+
+            if (!dodgedAttack)
             {
                 selfAnimator.SetTrigger("ThrowPunch");
                 persuingPlayer = false;
@@ -303,12 +311,22 @@ public class NPC_Script : MonoBehaviour
     internal bool dodgedAttack = false;
     public void DodgetAttack()
     {
+        Debug.Log("Dentro");
+        HitImage.GetComponent<Animator>().SetTrigger("Dodge");
+        StartCoroutine(DeactivateHitImage());
+
         dodgedAttack = true;
         selfAnimator.SetTrigger("ThrowPunch");
         persuingPlayer = false;
         GameManager.instance.DonePersuing();
-        HitImage.SetActive(false);
         StartCoroutine(TimeGettingBack());
+
+        IEnumerator DeactivateHitImage()
+        {
+            yield return new WaitForSeconds(0.4f);
+            HitImage.SetActive(false);
+            HitImage.transform.localScale = new Vector3(1, 1, 1);
+        }
     }
 
     IEnumerator TimeGettingBack()
@@ -326,7 +344,6 @@ public class NPC_Script : MonoBehaviour
         }
         dodgedAttack = false;
     }
-
 
     public void GettingJumped()
     {
